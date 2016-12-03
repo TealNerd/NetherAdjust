@@ -1,0 +1,4 @@
+name: NetherAdjust
+main: com.biggestnerd.netheradjust.NetherAdjust
+version: ${project.version}
+author: biggestnerd
