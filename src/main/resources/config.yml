@@ -1,2 +1,4 @@
-nether_ratio: 1
-overworld_ratio: 8
+#this is actually 1/8 but logic using two values wasnt working
+#so you can only have a nether ratio of 1/x but tbh if you need 2/5 or some shit
+#you're an asshole and can write your own plugin
+nether_ratio: 8
