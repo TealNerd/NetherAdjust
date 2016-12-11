@@ -16,7 +16,7 @@ public class NetherAdjust extends JavaPlugin implements Listener {
 	public void onEnable() {
 		saveDefaultConfig();
 		reloadConfig();
-		ratio = getConfig().getInt("nether_ratio", 4);
+		ratio = getConfig().getInt("nether_ratio", 8);
 		getServer().getPluginManager().registerEvents(this, this);
 	}
 	
