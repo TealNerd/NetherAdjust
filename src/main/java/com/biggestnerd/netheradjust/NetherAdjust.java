@@ -29,9 +29,6 @@ public class NetherAdjust extends JavaPlugin implements Listener {
 		event.useTravelAgent(true);
 		
 		double yscale = 1d * from.getWorld().getMaxHeight() / to.getWorld().getMaxHeight();
-		System.out.println("From: " + from.toString());
-		System.out.println("To: " + to.toString());
-		System.out.println("Ratio: " + ratio);
 		
 		int x = from.getBlockX();
 		int z = from.getBlockZ();
@@ -44,10 +41,8 @@ public class NetherAdjust extends JavaPlugin implements Listener {
 		}
 		
 		Location newTo = new Location(to.getWorld(), x, from.getBlockY() * yscale, z);
-		System.out.println("New To: " + newTo.toString());
 		event.setTo(newTo);
 		event.getPortalTravelAgent().setCanCreatePortal(true);
 		event.setTo(event.getPortalTravelAgent().findOrCreate(event.getTo()));
-		System.out.println("Actual to: " + event.getTo().toString());
 	}
 }
