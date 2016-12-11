@@ -6,40 +6,48 @@ import org.bukkit.World.Environment;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerPortalEvent;
+import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class NetherAdjust extends JavaPlugin implements Listener {
 	
-	private int overworldRatio;
-	private int netherRatio;
+	private int ratio;
 
 	public void onEnable() {
 		saveDefaultConfig();
 		reloadConfig();
-		overworldRatio = getConfig().getInt("overworld_ratio", 4);
-		netherRatio = getConfig().getInt("nether_ratio", 1);
+		ratio = getConfig().getInt("nether_ratio", 4);
 		getServer().getPluginManager().registerEvents(this, this);
 	}
 	
 	@EventHandler
 	public void onPlayerPortal(PlayerPortalEvent event) {
-		if(event.isCancelled()) return;
+		if(event.isCancelled() || event.getCause() != TeleportCause.NETHER_PORTAL) return;
 		
 		Location from = event.getFrom().clone();
-		if(from.getBlock().getType() != Material.PORTAL) return;
 		Location to = event.getTo().clone();
 		event.useTravelAgent(true);
 		
-		double scale;
 		double yscale = 1d * from.getWorld().getMaxHeight() / to.getWorld().getMaxHeight();
-		if(from.getWorld().getEnvironment() == Environment.NETHER) {
-			scale = netherRatio / overworldRatio;
+		System.out.println("From: " + from.toString());
+		System.out.println("To: " + to.toString());
+		System.out.println("Ratio: " + ratio);
+		
+		int x = from.getBlockX();
+		int z = from.getBlockZ();
+		if(to.getWorld().getEnvironment() == Environment.NETHER) {
+			x /= ratio;
+			z /= ratio;
 		} else {
-			scale = overworldRatio / netherRatio;
+			x *= ratio;
+			z *= ratio;
 		}
-		Location newTo = new Location(to.getWorld(), from.getX() * scale, from.getY() * yscale, from.getZ() * scale);
+		
+		Location newTo = new Location(to.getWorld(), x, from.getBlockY() * yscale, z);
+		System.out.println("New To: " + newTo.toString());
 		event.setTo(newTo);
 		event.getPortalTravelAgent().setCanCreatePortal(true);
 		event.setTo(event.getPortalTravelAgent().findOrCreate(event.getTo()));
+		System.out.println("Actual to: " + event.getTo().toString());
 	}
 }
